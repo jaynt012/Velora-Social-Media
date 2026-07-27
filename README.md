@@ -191,14 +191,6 @@ Velora utilizes a unique and visually engaging design language:
 - No email verification or password reset flow currently exists.
 - Media uploads are currently stored locally in the backend file system rather than an external bucket (like AWS S3).
 - Direct messages do not yet support rich media (images/videos).
-
-## Roadmap
-
-- [ ] Automated CI/CD test suite.
-- [ ] Migration of local image uploads to a cloud storage provider.
-- [ ] Push notifications using Service Workers for the web app.
-- [ ] Deployment configurations for Vercel (Frontend) and Render (Backend).
-
 ---
 
 *A portfolio project — developed by Jayant.*
