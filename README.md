@@ -109,16 +109,16 @@ velora-social-media/
 ```bash
 cd backend
 npm install
+cp .env.example .env
 ```
-Create a `.env` file in the `backend` folder (see [Environment variables](#environment-variables)):
-```bash
-PORT=5000
-JWT_SECRET=velora_super_secret_jwt_key_2026
-NODE_ENV=development
+Open .env and set JWT_SECRET to a long, random string (never reuse the placeholder, and never commit or share this file:
 ```
-Start the API and WebSocket server:
-```bash
-npm start
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+Then seed and start the API:
+```
+npm run seed     # populates the product catalog
+npm start        # or: npm run dev, for auto-restart on file changes
 ```
 The API will be running at `http://localhost:5000`.
 
