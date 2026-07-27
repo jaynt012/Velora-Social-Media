@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velora — Messages</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Include Socket.io client -->
+    <script src="js/socket.io.min.js"></script>
+    <style>
+        .msg-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            height: calc(100vh - var(--navbar-h) - 48px);
+            gap: 24px;
+        }
+
+        .conv-list {
+            background: rgba(255,255,255,0.7);
+            border-radius: var(--clay-radius);
+            box-shadow: var(--clay-shadow);
+            border: 1px solid rgba(255,255,255,0.6);
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .conv-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--clr-border);
+        }
+
+        .conv-header h2 {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .conv-items {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .conv-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: background var(--transition-fast);
+        }
+
+        .conv-item:hover, .conv-item.active {
+            background: rgba(255,255,255,0.9);
+        }
+
+        .conv-info { flex: 1; overflow: hidden; }
+        .conv-name { font-weight: 600; font-size: 1.05rem; }
+        .conv-last { 
+            color: var(--clr-text-muted); 
+            font-size: 0.9rem; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis;
+            margin-top: 4px;
+        }
+
+        .chat-area {
+            background: rgba(255,255,255,0.85);
+            border-radius: var(--clay-radius);
+            box-shadow: var(--clay-shadow);
+            border: 1px solid rgba(255,255,255,0.6);
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--clr-border);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(255,255,255,0.5);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .msg-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 20px;
+            font-size: 1rem;
+            line-height: 1.4;
+            animation: floatUp 0.3s ease;
+        }
+
+        .msg-received {
+            background: rgba(255,255,255,0.9);
+            color: var(--clr-text);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            box-shadow: var(--clay-shadow-sm);
+        }
+
+        .msg-sent {
+            background: linear-gradient(135deg, var(--clr-peach-dark), var(--clr-peach));
+            color: #4a211d;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+            box-shadow: 4px 4px 12px rgba(253, 188, 180, 0.4);
+        }
+
+        .chat-input-area {
+            padding: 16px 24px;
+            background: rgba(255,255,255,0.6);
+            border-top: 1px solid var(--clr-border);
+            display: flex;
+            gap: 12px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 24px;
+            border: 2px solid var(--clr-border);
+            background: rgba(255,255,255,0.8);
+            font-size: 1rem;
+            box-shadow: var(--clay-shadow-in);
+            transition: all var(--transition-fast);
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--clr-peach-dark);
+            background: #fff;
+        }
+
+        .send-btn {
+            background: var(--clr-peach-dark);
+            color: #fff;
+            border: none;
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 4px 4px 12px rgba(253, 188, 180, 0.4);
+            transition: transform var(--transition-fast);
+        }
+
+        .send-btn:hover { transform: scale(1.05); }
+
+        .empty-chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--clr-text-muted);
+        }
+        .empty-chat svg { width: 64px; height: 64px; opacity: 0.3; margin-bottom: 16px; }
+
+        @media (max-width: 900px) {
+            .msg-layout { grid-template-columns: 1fr; }
+            .conv-list { display: none; }
+            .conv-list.show { display: flex; }
+            .chat-area.hide { display: none; }
+        }
+    </style>
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico?v=1785165838932">
+</head>
+<body>
+    <div class="bg-blobs" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="main-navbar">
+        <a href="feed.html" class="navbar-brand">Velora</a>
+        <div class="navbar-center">
+            <a href="feed.html" class="navbar-link">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Home
+            </a>
+            <a href="explore.html" class="navbar-link">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Explore
+            </a>
+            <a href="messages.html" class="navbar-link active">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Messages
+            </a>
+        </div>
+        <div class="navbar-right" style="position: relative; display: flex; align-items: center;">
+            <a href="profile.html"><img src="" alt="Avatar" class="nav-avatar" id="nav-user-avatar" width="40" height="40"></a>
+            <button class="nav-logout-btn" aria-label="Logout" title="Logout" onclick="globalLogout()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            </button>
+            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open mobile menu">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+            </button>
+            <div class="mobile-menu-dropdown" id="mobile-menu-dropdown">
+                <a href="feed.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    Home
+                </a>
+                <a href="explore.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    Explore
+                </a>
+                <a href="messages.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    Messages
+                </a>
+                <a href="notifications.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    Notifications
+                </a>
+            
+                <a href="#" class="mobile-logout-link" onclick="globalLogout(); return false;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="container" style="max-width: 1200px;">
+            <div class="msg-layout">
+                
+                <!-- Sidebar: Conversations -->
+                <div class="conv-list">
+                    <div class="conv-header">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <h2>Messages</h2>
+                            <button class="clay-btn" id="new-msg-btn" style="padding:8px 14px;font-size:0.85rem;">+ New</button>
+                        </div>
+                        <div id="user-search-box" style="display:none;margin-top:12px;">
+                            <input type="text" id="user-search-input" placeholder="Search users to message..." style="width:100%;padding:10px 14px;border-radius:12px;border:1.5px solid var(--clr-border);background:rgba(255,255,255,0.8);font-size:0.9rem;box-sizing:border-box;">
+                            <div id="user-search-results" style="margin-top:8px;"></div>
+                        </div>
+                    </div>
+                    <div class="conv-items" id="conv-list">
+                        <div style="padding:24px; text-align:center;"><span class="spinner"></span></div>
+                    </div>
+                </div>
+
+                <!-- Chat Area -->
+                <div class="chat-area" id="chat-area">
+                    <div class="empty-chat">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        <h2>Your Messages</h2>
+                        <p>Select a conversation to start chatting.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="js/api.js?v=3"></script>
+    <script src="js/auth.js?v=3"></script>
+    <script src="js/messages.js?v=3"></script>
+</body>
+</html>

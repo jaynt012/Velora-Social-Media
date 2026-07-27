@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velora — Your Feed</title>
+    <meta name="description" content="Your personalized Velora feed.">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .nav-notif-btn {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            color: var(--clr-text-muted);
+            transition: all var(--transition-fast);
+            cursor: pointer;
+        }
+        .nav-notif-btn:hover {
+            background: rgba(253,188,180,0.2);
+            color: var(--clr-text);
+        }
+        .nav-notif-btn svg { width: 22px; height: 22px; }
+        .notif-dot {
+            position: absolute;
+            top: 6px; right: 6px;
+            width: 8px; height: 8px;
+            background: #E11D48;
+            border-radius: 50%;
+            border: 2px solid var(--clr-bg);
+        }
+
+        /* Feed skeleton loading */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.5) 25%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0.5) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+            border-radius: 12px;
+        }
+        @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+        .skeleton-card {
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .sk-header { display: flex; gap: 12px; margin-bottom: 14px; }
+        .sk-avatar { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; }
+        .sk-lines { flex: 1; display: flex; flex-direction: column; gap: 8px; justify-content: center; }
+        .sk-line { height: 12px; border-radius: 6px; }
+
+        /* Post card extra styles */
+        .post-more-btn {
+            margin-left: auto;
+            width: 34px; height: 34px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--clr-text-muted);
+            background: transparent;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .post-more-btn:hover { background: rgba(253,188,180,0.2); color: var(--clr-text); }
+        .post-more-btn svg { width: 18px; height: 18px; }
+
+        /* Tags / hashtags */
+        .post-tag {
+            display: inline-block;
+            color: var(--clr-sky-dark);
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .post-tag:hover { text-decoration: underline; }
+
+        /* Search input in navbar */
+        .nav-search {
+            flex: 1;
+            max-width: 280px;
+            position: relative;
+        }
+        .nav-search input {
+            width: 100%;
+            padding: 9px 16px 9px 38px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.6);
+            border: 1.5px solid var(--clr-border);
+            box-shadow: var(--clay-shadow-in);
+            font-size: 0.88rem;
+            color: var(--clr-text);
+            transition: all var(--transition-fast);
+        }
+        .nav-search input:focus {
+            background: rgba(255,255,255,0.95);
+            border-color: var(--clr-peach-dark);
+            outline: none;
+        }
+        .nav-search svg {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px; height: 16px;
+            color: var(--clr-text-muted);
+            pointer-events: none;
+        }
+
+        /* Sidebar profile section */
+        .sidebar-section {
+            padding: 0;
+        }
+
+        /* No more posts indicator */
+        .feed-end {
+            text-align: center;
+            padding: 32px;
+            color: var(--clr-text-muted);
+            font-size: 0.9rem;
+        }
+    </style>
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico?v=1785165838928">
+</head>
+<body>
+    <div class="bg-blobs" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="main-navbar" role="navigation" aria-label="Main navigation">
+        <a href="index.html" class="navbar-brand" id="feed-brand">Velora</a>
+
+        <!-- Center nav links -->
+        <div class="navbar-center" role="tablist" aria-label="Feed navigation tabs">
+            <a href="feed.html" class="navbar-link active" id="nav-home" role="tab" aria-selected="true" title="Home">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Home
+            </a>
+            <a href="explore.html" class="navbar-link" id="nav-explore" role="tab" aria-selected="false" title="Explore">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Explore
+            </a>
+            <a href="messages.html" class="navbar-link" id="nav-messages" role="tab" aria-selected="false" title="Messages">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Messages
+            </a>
+            <a href="notifications.html" class="navbar-link" id="nav-notifications" role="tab" aria-selected="false" title="Notifications">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                Notifications
+            </a>
+        </div>
+
+        <!-- Right side -->
+        <div class="navbar-right" style="position: relative; display: flex; align-items: center;">
+            <a href="profile.html"><img src="" alt="Your avatar" class="nav-avatar" id="nav-user-avatar" width="40" height="40"></a>
+            <button class="nav-logout-btn" aria-label="Logout" title="Logout" onclick="globalLogout()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            </button>
+            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open mobile menu">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+            </button>
+            <div class="mobile-menu-dropdown" id="mobile-menu-dropdown">
+                <a href="feed.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    Home
+                </a>
+                <a href="explore.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    Explore
+                </a>
+                <a href="messages.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    Messages
+                </a>
+                <a href="notifications.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    Notifications
+                </a>
+            
+                <a href="#" class="mobile-logout-link" onclick="globalLogout(); return false;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Body -->
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="feed-layout">
+                <!-- Left Sidebar -->
+                <aside class="sidebar-left" aria-label="Profile sidebar">
+                    <div class="clay-card profile-mini-card" id="sidebar-profile-card">
+                        <img src="" alt="Your avatar" class="profile-mini-avatar" id="sidebar-avatar" width="72" height="72">
+                        <div class="profile-mini-name" id="sidebar-name">Loading...</div>
+                        <div class="profile-mini-handle" id="sidebar-handle">@...</div>
+                        <div class="profile-mini-stats">
+                            <div class="stat-item">
+                                <div class="stat-count" id="sidebar-posts">—</div>
+                                <div class="stat-label">Posts</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-count" id="sidebar-followers">—</div>
+                                <div class="stat-label">Followers</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-count" id="sidebar-following">—</div>
+                                <div class="stat-label">Following</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clay-card" style="padding: 20px;">
+                        <div class="widget-title">Quick Links</div>
+                        <nav aria-label="Quick links">
+                            <a href="feed.html"    style="display:flex; align-items:center; gap:10px; padding:10px 0; color:var(--clr-text); font-weight:600; border-bottom:1px solid var(--clr-border);" id="ql-home">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                                Home
+                            </a>
+                            <a href="profile.html" style="display:flex; align-items:center; gap:10px; padding:10px 0; color:var(--clr-text-muted); font-weight:600;" id="ql-profile">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                My Profile
+                            </a>
+                        </nav>
+                        <button class="clay-btn clay-btn-ghost clay-btn-sm" style="width:100%; margin-top:12px;" id="logout-btn" aria-label="Log out of Velora">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                            Log Out
+                        </button>
+                    </div>
+                </aside>
+
+                <!-- Main Feed -->
+                <main aria-label="Feed" id="main-feed">
+                    <!-- Create Post -->
+                    <div class="clay-card create-post" id="create-post-card">
+                        <div class="create-post-input">
+                            <img src="" alt="Your avatar" class="avatar avatar-sm" id="create-post-avatar" width="32" height="32" style="border-radius:50%;">
+                            <textarea id="post-content" placeholder="What's on your mind?" rows="1" aria-label="Write a new post"></textarea>
+                        </div>
+                        <div id="image-preview-container" style="display:none; position:relative; margin: 10px 16px 0 60px;">
+                            <img id="image-preview" src="" alt="Image preview" style="max-width: 100%; max-height: 300px; border-radius: 12px; object-fit: cover;">
+                            <button id="remove-image-btn" style="position:absolute; top:8px; right:8px; background:rgba(0,0,0,0.5); color:white; border:none; border-radius:50%; width:28px; height:28px; cursor:pointer; display:flex; align-items:center; justify-content:center;">&times;</button>
+                        </div>
+                        <div class="create-post-footer">
+                            <div class="post-type-btns">
+                                <input type="file" id="post-image-input" accept="image/*" style="display:none;">
+                                <button class="post-type-btn" id="attach-photo-btn" aria-label="Attach photo">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                    Photo
+                                </button>
+                                <button class="post-type-btn" id="attach-link-btn" aria-label="Attach link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                                    Link
+                                </button>
+                            </div>
+                            <button class="clay-btn clay-btn-sm" id="submit-post-btn" aria-label="Publish post">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                                Post
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Feed Posts Container -->
+                    <div id="posts-container" aria-live="polite" aria-label="Feed posts"></div>
+                    <div class="feed-end" id="feed-end" style="display:none;">You're all caught up! 🎉</div>
+                </main>
+
+                <!-- Right Sidebar -->
+                <aside class="sidebar-right" aria-label="Trending and suggestions">
+                    <!-- Trending -->
+                    <div class="clay-card" style="padding: 20px;">
+                        <div class="widget-title">Trending</div>
+                        <div id="trending-list">
+                            <div class="trending-item"><div class="trending-tag">#DesignVibes</div><div class="trending-count">12.4K posts</div></div>
+                            <div class="trending-item"><div class="trending-tag">#Velora</div><div class="trending-count">8.1K posts</div></div>
+                            <div class="trending-item"><div class="trending-tag">#CreativeLife</div><div class="trending-count">5.6K posts</div></div>
+                            <div class="trending-item"><div class="trending-tag">#MoodBoard</div><div class="trending-count">3.2K posts</div></div>
+                            <div class="trending-item"><div class="trending-tag">#GoldenHour</div><div class="trending-count">2.8K posts</div></div>
+                        </div>
+                    </div>
+
+                    <!-- Who to follow -->
+                    <div class="clay-card" style="padding: 20px;" id="suggestions-card">
+                        <div class="widget-title">Who to Follow</div>
+                        <div id="suggestions-list">
+                            <div style="text-align:center; padding: 20px;"><span class="spinner"></span></div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="js/api.js?v=2"></script>
+    <script src="js/feed.js?v=2"></script>
+</body>
+</html>

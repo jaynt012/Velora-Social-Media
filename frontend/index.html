@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velora — The New Wave of Social</title>
+    <meta name="description"
+        content="Velora is a fresh, beautiful, and secure social networking platform. Connect, share, and inspire with a community that truly gets you.">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* ---- Landing-specific ---- */
+        .landing-nav {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stats-strip {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 48px auto 0;
+            max-width: 600px;
+        }
+
+        .stat-pill {
+            text-align: center;
+        }
+
+        .stat-pill .num {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--clr-peach-dark), var(--clr-sky-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-pill .lbl {
+            font-size: 0.85rem;
+            color: var(--clr-text-muted);
+            font-weight: 500;
+        }
+
+        /* Preview feed mockup */
+        .mockup-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .mockup-post {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 3px 3px 12px rgba(253, 188, 180, 0.25);
+        }
+
+        .mockup-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            border: 2px solid var(--clr-peach);
+        }
+
+        .mockup-content {
+            flex: 1;
+        }
+
+        .mockup-name {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+
+        .mockup-text {
+            font-size: 0.85rem;
+            color: var(--clr-text-muted);
+            line-height: 1.5;
+        }
+
+        .mockup-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
+        }
+
+        .mockup-action {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.8rem;
+            color: var(--clr-text-muted);
+        }
+
+        .mockup-action svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Features */
+        .features-section {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 32px;
+            padding: 64px 48px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            padding: 80px 24px;
+        }
+
+        .cta-card {
+            padding: 64px 48px;
+            display: inline-block;
+            max-width: 640px;
+        }
+
+        .cta-card h2 {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            margin-bottom: 16px;
+        }
+
+        .cta-card p {
+            color: var(--clr-text-muted);
+            margin-bottom: 32px;
+            font-size: 1.05rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 32px 24px;
+            text-align: center;
+            color: var(--clr-text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--clr-border);
+        }
+
+        .footer-brand {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, var(--clr-peach-dark), var(--clr-sky-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--clr-text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-fast);
+        }
+
+        .footer-links a:hover {
+            color: var(--clr-primary);
+        }
+    </style>
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico?v=1785165838930">
+</head>
+
+<body>
+    <!-- Background Blobs -->
+    <div class="bg-blobs" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+    </div>
+
+    <!-- Floating Navbar -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <a href="index.html" class="navbar-brand" id="nav-brand">Velora</a>
+        <div class="landing-nav">
+            <a href="login.html" class="clay-btn clay-btn-ghost clay-btn-sm" id="nav-login">Log In</a>
+            <a href="signup.html" class="clay-btn clay-btn-sm" id="nav-signup">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <line x1="19" y1="8" x2="19" y2="14" />
+                    <line x1="22" y1="11" x2="16" y2="11" />
+                </svg>
+                Join Free
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="landing-hero">
+        <div class="hero-badge">
+            <span class="dot" aria-hidden="true"></span>
+            Join the wave
+        </div>
+
+        <h1 class="hero-title">
+            Where <span style="color: var(--clr-peach-dark);">real connections</span><br>come to life
+        </h1>
+
+        <p class="hero-subtitle">
+            Velora is a beautifully designed social space built for creativity, community, and genuine connection. No
+            noise just vibes.
+        </p>
+
+        <div class="hero-actions">
+            <a href="signup.html" id="hero-cta-signup">
+                <button class="clay-btn clay-btn-lg" aria-label="Create your free Velora account">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                        aria-hidden="true">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    Create Your Account
+                </button>
+            </a>
+            <a href="login.html" id="hero-cta-login">
+                <button class="clay-btn clay-btn-ghost clay-btn-lg" aria-label="Log in to Velora">
+                    Log In
+                </button>
+            </a>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-strip">
+            <div class="stat-pill">
+                <div class="num">24K+</div>
+                <div class="lbl">Members</div>
+            </div>
+            <div class="stat-pill">
+                <div class="num">180K+</div>
+                <div class="lbl">Posts Today</div>
+            </div>
+            <div class="stat-pill">
+                <div class="num">99%</div>
+                <div class="lbl">Uptime</div>
+            </div>
+        </div>
+
+        <!-- UI Mockup -->
+        <div class="hero-mockup fade-in">
+            <div class="mockup-frame">
+                <div class="mockup-posts">
+                    <div class="mockup-post">
+                        <img src="https://api.dicebear.com/8.x/avataaars/svg?seed=Aria" class="mockup-avatar"
+                            alt="Aria's avatar" width="38" height="38">
+                        <div class="mockup-content">
+                            <div class="mockup-name">Aria Kim</div>
+                            <div class="mockup-text">Just dropped my new moodboard for Q3 — softness, structure, and a
+                                whole lot of lavender 🌿</div>
+                            <div class="mockup-actions">
+                                <span class="mockup-action">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#E11D48"
+                                        aria-hidden="true">
+                                        <path
+                                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                    </svg>
+                                    142
+                                </span>
+                                <span class="mockup-action">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                    </svg>
+                                    38
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mockup-post">
+                        <img src="https://api.dicebear.com/8.x/avataaars/svg?seed=Marco" class="mockup-avatar"
+                            alt="Marco's avatar" width="38" height="38">
+                        <div class="mockup-content">
+                            <div class="mockup-name">Marco Rivera</div>
+                            <div class="mockup-text">Golden hour at the rooftop. Some moments just deserve to be shared
+                                on Velora ✨</div>
+                            <div class="mockup-actions">
+                                <span class="mockup-action">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#E11D48"
+                                        aria-hidden="true">
+                                        <path
+                                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                    </svg>
+                                    210
+                                </span>
+                                <span class="mockup-action">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                    </svg>
+                                    54
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="container fade-in" style="margin-bottom: 80px;" aria-labelledby="features-heading">
+        <div class="features-section">
+            <h2 class="section-title" id="features-heading">Everything you need to thrive</h2>
+            <div class="features-grid">
+                <div class="clay-card feature-card">
+                    <div class="feature-icon" style="background: var(--clr-peach);">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#fff"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                    </div>
+                    <h3>Real Community</h3>
+                    <p>Find your people. Follow, connect, and grow with creators and thinkers who inspire you.</p>
+                </div>
+                <div class="clay-card feature-card">
+                    <div class="feature-icon" style="background: var(--clr-sky);">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#fff"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                            <circle cx="8.5" cy="8.5" r="1.5" />
+                            <polyline points="21 15 16 10 5 21" />
+                        </svg>
+                    </div>
+                    <h3>Rich Media Posts</h3>
+                    <p>Share text, photos, and ideas beautifully. Your content always looks stunning.</p>
+                </div>
+                <div class="clay-card feature-card">
+                    <div class="feature-icon" style="background: var(--clr-lavender);">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#fff"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg>
+                    </div>
+                    <h3>Privacy First</h3>
+                    <p>Your data, your rules. We never sell your information or show you unwanted ads.</p>
+                </div>
+                <div class="clay-card feature-card">
+                    <div class="feature-icon" style="background: var(--clr-mint);">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#fff"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                        </svg>
+                    </div>
+                    <h3>Live Activity</h3>
+                    <p>See trending posts, active discussions, and what your community is buzzing about right now.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section fade-in">
+        <div class="clay-card cta-card">
+            <h2>Ready to join the wave?</h2>
+            <p>Thousands of creators and thinkers are already on Velora. It's free to join and always will be.</p>
+            <a href="signup.html" id="cta-bottom-signup">
+                <button class="clay-btn clay-btn-lg" aria-label="Sign up for Velora">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                        aria-hidden="true">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    Get Started — It's Free
+                </button>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-brand">Velora</div>
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="login.html">Log In</a>
+            <a href="signup.html">Sign Up</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="privacy.html">Privacy Policy</a>
+        </div>
+        <p>© 2026 Velora. Developed by Jayant.</p>
+    </footer>
+
+    <script>
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+</body>
+
+</html>

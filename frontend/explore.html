@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velora — Explore</title>
+    <meta name="description" content="Discover new people and posts on Velora.">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .explore-layout {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .search-hero {
+            padding: 32px 24px;
+            background: rgba(255,255,255,0.7);
+            border-radius: var(--clay-radius);
+            box-shadow: var(--clay-shadow-sm);
+            border: 1px solid rgba(255,255,255,0.6);
+            backdrop-filter: blur(12px);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .search-hero h1 {
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        .search-bar-lg {
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .search-bar-lg input {
+            width: 100%;
+            padding: 16px 20px 16px 48px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.8);
+            border: 2px solid var(--clr-border);
+            box-shadow: var(--clay-shadow-in);
+            font-size: 1.05rem;
+            color: var(--clr-text);
+            transition: all var(--transition-fast);
+        }
+
+        .search-bar-lg input:focus {
+            background: rgba(255,255,255,1);
+            border-color: var(--clr-peach-dark);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(253, 188, 180, 0.25), var(--clay-shadow-in);
+        }
+
+        .search-bar-lg svg {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px; height: 20px;
+            color: var(--clr-text-muted);
+            pointer-events: none;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 24px;
+            border-bottom: 2px solid var(--clr-border);
+            margin-bottom: 24px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 12px 16px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--clr-text-muted);
+            cursor: pointer;
+            position: relative;
+            transition: color var(--transition-fast);
+        }
+
+        .tab-btn:hover { color: var(--clr-text); }
+        .tab-btn.active { color: var(--clr-peach-dark); }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; left: 0; right: 0;
+            height: 3px;
+            background: var(--clr-peach-dark);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .search-results-section {
+            display: none;
+        }
+        
+        .search-results-section.active {
+            display: block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--clr-text-muted);
+            background: rgba(255,255,255,0.5);
+            border-radius: 16px;
+            border: 1px dashed var(--clr-border);
+        }
+
+        .empty-state svg {
+            width: 48px; height: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 1024px) {
+            .explore-layout { grid-template-columns: 1fr; }
+            .sidebar-right { display: none; }
+        }
+    </style>
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico?v=1785165838924">
+</head>
+<body>
+    <div class="bg-blobs" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="main-navbar" role="navigation">
+        <a href="feed.html" class="navbar-brand">Velora</a>
+        <div class="navbar-center">
+            <a href="feed.html" class="navbar-link" title="Home">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Home
+            </a>
+            <a href="explore.html" class="navbar-link active" title="Explore">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Explore
+            </a>
+            <a href="messages.html" class="navbar-link" title="Messages">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Messages
+            </a>
+            <a href="notifications.html" class="navbar-link" title="Notifications">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                Notifications
+            </a>
+        </div>
+        <div class="navbar-right" style="position: relative; display: flex; align-items: center;">
+            <a href="profile.html"><img src="" alt="Your avatar" class="nav-avatar" id="nav-user-avatar" width="40" height="40"></a>
+            <button class="nav-logout-btn" aria-label="Logout" title="Logout" onclick="globalLogout()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            </button>
+            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open mobile menu">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+            </button>
+            <div class="mobile-menu-dropdown" id="mobile-menu-dropdown">
+                <a href="feed.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    Home
+                </a>
+                <a href="explore.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    Explore
+                </a>
+                <a href="messages.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    Messages
+                </a>
+                <a href="notifications.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    Notifications
+                </a>
+            
+                <a href="#" class="mobile-logout-link" onclick="globalLogout(); return false;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Body -->
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="explore-layout">
+                
+                <!-- Main Content -->
+                <main aria-label="Explore">
+                    <div class="search-hero">
+                        <h1>Discover Velora</h1>
+                        <div class="search-bar-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <input type="text" id="search-input" placeholder="Search for people or posts..." autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="tabs-header">
+                        <button class="tab-btn active" data-target="posts-results">Posts</button>
+                        <button class="tab-btn" data-target="users-results">People</button>
+                    </div>
+
+                    <div id="posts-results" class="search-results-section active">
+                        <div id="posts-container">
+                            <!-- Posts go here -->
+                            <div class="empty-state">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                <h3>Search the community</h3>
+                                <p>Type in the search bar above to find posts and inspiration.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="users-results" class="search-results-section">
+                        <div class="clay-card" id="users-container" style="padding:10px;">
+                            <!-- Users go here -->
+                        </div>
+                    </div>
+                </main>
+
+                <!-- Right Sidebar -->
+                <aside class="sidebar-right">
+                    <div class="clay-card" style="padding: 20px;">
+                        <div class="widget-title">Trending Right Now</div>
+                        <div id="trending-list">
+                            <div style="text-align:center; padding:20px;"><span class="spinner"></span></div>
+                        </div>
+                    </div>
+                </aside>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/explore.js"></script>
+</body>
+</html>

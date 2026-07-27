@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velora — Log In</title>
+    <meta name="description" content="Log in to your Velora account and reconnect with your community.">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .welcome-graphic {
+            text-align: center;
+        }
+
+        .welcome-graphic h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 16px;
+        }
+
+        .welcome-graphic p {
+            color: var(--clr-text-muted);
+            font-size: 1rem;
+            max-width: 360px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+        }
+
+        .avatar-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .avatar-grid img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: var(--clay-shadow-sm);
+            transition: transform 0.2s ease;
+        }
+
+        .avatar-grid img:hover {
+            transform: scale(1.1);
+        }
+
+        .member-count-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.75);
+            border-radius: 999px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            box-shadow: var(--clay-shadow-sm);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .member-count-badge .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--clr-mint-dark);
+            border-radius: 50%;
+            animation: pulse 2s ease infinite;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--clr-text-muted);
+            background: none;
+            border: none;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            transition: color var(--transition-fast);
+        }
+
+        .password-toggle:hover {
+            color: var(--clr-text);
+        }
+
+        .password-toggle svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .forgot-link {
+            float: right;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--clr-sky-dark);
+        }
+    </style>
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+
+<body>
+    <div class="bg-blobs" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="auth-layout">
+        <!-- Left Panel -->
+        <div class="auth-left">
+            <div class="welcome-graphic">
+                <a href="index.html" class="navbar-brand"
+                    style="display:inline-block; margin-bottom: 32px; font-size: 2rem;" id="login-brand-logo">Velora</a>
+                <h1>Welcome back to<br>your community</h1>
+                <p>Pick up right where you left off. Your feed, your people, your vibe all waiting for you.</p>
+
+                <!-- Avatar collage -->
+                <div class="avatar-grid" aria-label="Community member avatars">
+                    <img src="https://api.dicebear.com/8.x/avataaars/svg?seed=Aria" alt="Member avatar" width="48"
+                        height="48">
+                    <img src="https://api.dicebear.com/8.x/avataaars/svg?seed=Marco" alt="Member avatar" width="48"
+                        height="48">
+                    <img src="https://api.dicebear.com/8.x/avataaars/svg?seed=Zoe" alt="Member avatar" width="48"
+                        height="48">
+                    <img src="https://api.dicebear.com/8.x/avataaars/svg?seed=Luca" alt="Member avatar" width="48"
+                        height="48">
+                    <img src="https://api.dicebear.com/8.x/avataaars/svg?seed=Maya" alt="Member avatar" width="48"
+                        height="48">
+                    <img src="https://api.dicebear.com/8.x/avataaars/svg?seed=Jake" alt="Member avatar" width="48"
+                        height="48">
+                    <img src="https://api.dicebear.com/8.x/avataaars/svg?seed=Nadia" alt="Member avatar" width="48"
+                        height="48">
+                    <img src="https://api.dicebear.com/8.x/avataaars/svg?seed=Sam" alt="Member avatar" width="48"
+                        height="48">
+                    <img src="https://api.dicebear.com/8.x/avataaars/svg?seed=Freya" alt="Member avatar" width="48"
+                        height="48">
+                    <img src="https://api.dicebear.com/8.x/avataaars/svg?seed=Owen" alt="Member avatar" width="48"
+                        height="48">
+                </div>
+                <div class="member-count-badge">
+                    <span class="dot" aria-hidden="true"></span>
+                    24,000+ members active today
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="auth-right">
+            <div class="auth-panel">
+                <a href="index.html" id="login-back-home"
+                    style="display:flex; align-items:center; gap:6px; color: var(--clr-text-muted); font-size:0.85rem; font-weight:600; margin-bottom:28px; width:fit-content; transition: color 0.2s;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                        aria-hidden="true">
+                        <line x1="19" y1="12" x2="5" y2="12" />
+                        <polyline points="12 19 5 12 12 5" />
+                    </svg>
+                    Back to home
+                </a>
+
+                <div class="auth-brand">Welcome back</div>
+                <p class="auth-tagline">Sign in to your Velora account.</p>
+
+                <form id="login-form" novalidate>
+                    <div class="form-group">
+                        <label for="login-email" class="form-label">Email address</label>
+                        <div class="input-wrapper">
+                            <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                aria-hidden="true">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                <polyline points="22,6 12,13 2,6" />
+                            </svg>
+                            <input type="email" id="login-email" class="clay-input" placeholder="you@example.com"
+                                required autocomplete="email">
+                        </div>
+                        <div class="form-error" id="login-email-error" role="alert"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="login-password" class="form-label">
+                            Password
+                            <a href="#" class="forgot-link" id="forgot-password-link" tabindex="0">Forgot password?</a>
+                        </label>
+                        <div class="input-wrapper">
+                            <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                aria-hidden="true">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                            </svg>
+                            <input type="password" id="login-password" class="clay-input" placeholder="Your password"
+                                required autocomplete="current-password">
+                            <button type="button" class="password-toggle" id="toggle-login-pwd"
+                                aria-label="Toggle password visibility">
+                                <svg id="eye-icon-login" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="form-error" id="login-password-error" role="alert"></div>
+                    </div>
+
+                    <div class="form-error" id="login-global-error" role="alert"
+                        style="text-align:center; margin-bottom:12px;"></div>
+
+                    <button type="submit" class="clay-btn" style="width:100%;" id="login-submit-btn">
+                        <span id="login-btn-text">Sign In</span>
+                        <span id="login-spinner" class="spinner" style="display:none;" aria-hidden="true"></span>
+                    </button>
+                </form>
+
+                <div class="divider">or</div>
+
+                <p style="text-align:center; font-size:0.92rem; color: var(--clr-text-muted);">
+                    Don't have an account?
+                    <a href="signup.html" style="color: var(--clr-peach-dark); font-weight: 700;" id="go-to-signup">Join
+                        Velora</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+
+</html>
